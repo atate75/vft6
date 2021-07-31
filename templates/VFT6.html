@@ -116,7 +116,7 @@ function request() {
     console.log(reliability_dict);
     console.log(dataset);
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "http://192.168.1.51:5000/process", true);
+    xhr.open("POST", "https://visual-field-test.herokuapp.com/process", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
     xhr.send(JSON.stringify({"DataSet":dataset,"reliability_dict":reliability_dict}));

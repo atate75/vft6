@@ -206,7 +206,7 @@ def convert(seconds):
       
     return "%02d:%02d" % (minutes, seconds)
 
-@app.route("/test")
+@app.route("/")
 def main():
     return render_template("VFT6.html")
  
