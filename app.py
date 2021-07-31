@@ -220,7 +220,7 @@ def processjson():
     reliability_dict = data['reliability_dict']
     fig = return_dots_VFT6(DataSet,reliability_dict)
     cwd = os.getcwd()
-    path = cwd + "/eb-flask/static/"
+    path = cwd + "/static/"
     name1 = str(random.random()) + ".pdf"
     print(cwd)
     fig.savefig(path+name1)
