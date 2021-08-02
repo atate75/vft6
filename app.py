@@ -218,7 +218,7 @@ def processjson():
     stuff_to_remove = os.listdir(cwd+"/static")
 
     for i in stuff_to_remove:
-        os.remove(cwd+"static/"+i)
+        os.remove(cwd+"/static/"+i)
 
     path = cwd + "/static/"
     name1 = str(random.random()) + ".pdf"
