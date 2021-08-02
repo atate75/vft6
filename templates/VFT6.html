@@ -58,7 +58,7 @@ function fail() {
     //Saving data
     var final_time = t2 - t;
     points_failed.push([x,y,color,final_time]);
-    dataset.push([0,x-500,y-500,color,final_time]);
+    dataset.push([0,x-500,-1*y+500,color,final_time]);
     console.log("FAILED");
     if (standard_points[runs][2] == 50){
             standard_points.push([x,y,80]);
