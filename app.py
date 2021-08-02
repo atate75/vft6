@@ -177,8 +177,8 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
 
 
 
-    prediction[prediction > 0.75] = 1
-    prediction[prediction < 0.75] = 0
+    prediction[prediction > 0.5] = 1
+    prediction[prediction < 0.5] = 0
     ax4.pcolormesh(prediction,cmap=cmap, norm=norm)
     ax4.pcolormesh(prediction_contrast_1,alpha=0.7,cmap=plt.cm.get_cmap("binary",7),vmin=20,vmax=100)
     
