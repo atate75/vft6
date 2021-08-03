@@ -52,9 +52,9 @@ function fail() {
     if (reliability_dict["FNR"][2]==true){
         reliability_dict["FNR"][2] = false;
         reliability_dict["FNR"][0] += 1 ;      
-    }else if (reliability_dict["FPR"][2]==true){
+    } else if (reliability_dict["FPR"][2]==true){
         reliability_dict["FPR"][2] = false;
-    } else{
+    } else {
     //Saving data
     var final_time = t2 - t;
     points_failed.push([x,y,color,final_time]);
@@ -83,11 +83,13 @@ function new_point() {
     if (standard_points[runs][0] > 1){
         x = standard_points[runs][0];
         y = standard_points[runs][1];
-    }else{    
+    } else {    
     x = standard_points[runs][0]*500 + centerX;
     y = -1*standard_points[runs][1]*500 + centerY;
     }
     color = standard_points[runs][2];
+    reliability_dict["FNR"][2] = false;
+    reliability_dict["FPR"][2] = false;
     if (color == "FNR"){
         reliability_dict["FNR"][1] += 1;
         reliability_dict["FNR"][2] = true;
@@ -152,12 +154,12 @@ function keyPush(evt) {
             runs += 1;
 
             //False Positives and False Negatives
-            if (reliability_dict["FNR"][2]==true){
+            if (reliability_dict["FNR"][2]==true) {
                 reliability_dict["FNR"][2] = false;
             } else if (reliability_dict["FPR"][2]==true){
                 reliability_dict["FPR"][2] = false;
                 reliability_dict["FPR"][0] += 1;
-            } else{
+            } else {
             var d = new Date();
             t2 = d.getTime();
             var final_time = t2 - t;
@@ -165,7 +167,6 @@ function keyPush(evt) {
             dataset.push([1,x-500,y-500,color,final_time])
             }
             console.log("SEEN");
-            
             new_point()
         }
         case 13:
@@ -201,8 +202,6 @@ function game(){
     t = d.getTime();
     timers.push(setTimeout(fail, 1500));
 }
-
-
 
 </script> 
 </body>

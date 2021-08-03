@@ -44,8 +44,8 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     
     upper_bound_time = statistics.median(time_set_GOOD) + 2*statistics.stdev(time_set_GOOD)
 
-    FPR = str(reliability_dict["FPR"][1]-reliability_dict["FPR"][0]) +" / "+str(reliability_dict["FPR"][1])
-    FNR = str(reliability_dict["FPR"][1]-reliability_dict["FNR"][0]) +" / "+str(reliability_dict["FNR"][1])
+    FPR = str(reliability_dict["FPR"][1]-reliability_dict["FPR"][0]) +" / "+str(4)
+    FNR = str(reliability_dict["FPR"][1]-reliability_dict["FNR"][0]) +" / "+str(4)
     number_dots = len(x_good) + len(x_bad)
     time_now = now.strftime("%Y-%m-%d")
 
@@ -88,7 +88,7 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     
     ax2.plot(time_set_GOODx,time_set, label="Response time")
     ax2.axhline(y=upper_bound_time,color="g", linestyle="--", label="Upper Bound Outliers")
-    ax2.axhline(y=upper_bound_time,color="m", linestyle="--", label="Moving Median")
+    ax2.axhline(y=statistics.mean(time_set_GOOD),color="m", linestyle="--", label="Moving Median")
     ax2.legend()
     ax2.set_ylabel("ms")
     ax2.set_title("Reliability Metrics")
@@ -109,7 +109,7 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     prediction = nbhrs.predict_proba(np.c_[xx.ravel(), yy.ravel()])[:,0]
     prediction = prediction.reshape(xx.shape)
 
-    ax4.set_title("Predicted Loss")
+    ax4.set_title("Minimum Stimulus")
     nbhrs_contrast_1 = KNeighborsClassifier(n_neighbors=3, weights='distance')
     nbhrs_contrast_1.fit(big_data, z2)
     
@@ -139,8 +139,7 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
         a.yaxis.set_ticks_position('none')
         a.yaxis.set_ticklabels([])
 
-    ax3.set_xlim([0,50])
-    ax3.set_ylim([0,50])
+
     axes = [ax3,ax4,ax5]
     for a in axes:
         a.set_xlim([0,50])
@@ -156,14 +155,19 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
         if i%9 == 0 and j%9 == 0:
             if ((i-23)**2+(j-24)**2)**0.5 < 24.9:
                 ax3.text(j+2,i+1,str(var),ha='left',va='bottom', bbox=dict(boxstyle='round',facecolor='white',edgecolor='0.3'))
-            
+    
+    
+    prediction[prediction > 0.5] = 1
+    prediction[prediction < 0.5] = 0       
 
     for (i,j),z in np.ndenumerate(prediction_contrast_1):
         var = int((100-z)*9/24)
         ax5_score.append(var)
         if i%5 == 0 and j%5 == 0:
             if ((i-23)**2+(j-24)**2)**0.5 < 24.9:
-                
+                if prediction[i][j] == 1:
+                    var = "#"
+                    ax5_score[-1] = 0
                 ax5.text(j+1,i+1,str(var),ha='left',va='bottom', bbox=dict(boxstyle='round',facecolor='white',edgecolor='0.3'))
                 
 
@@ -177,8 +181,7 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
 
 
 
-    prediction[prediction > 0.5] = 1
-    prediction[prediction < 0.5] = 0
+    
     ax4.pcolormesh(prediction,cmap=cmap, norm=norm)
     ax4.pcolormesh(prediction_contrast_1,alpha=0.7,cmap=plt.cm.get_cmap("binary",7),vmin=20,vmax=100)
     
@@ -225,5 +228,3 @@ def processjson():
     fig.savefig(path+name1)
     response = jsonify({"redirect": "/static/"+name1})
     return response
-    
-
