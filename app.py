@@ -114,7 +114,10 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     nbhrs_contrast_1.fit(big_data, z2)
     
     prediction_contrast_1 = nbhrs_contrast_1.predict(np.c_[xx.ravel(), yy.ravel()]).reshape(xx.shape)
-
+    prediction_contrast_1[0][0] = 0
+    prediction_contrast_1[-1][-1] = 1
+    prediction[0][0] = 0
+    prediction[-1][-1] = 1
     ax4.set_aspect('equal')
     
     
@@ -139,7 +142,6 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
         a.yaxis.set_ticks_position('none')
         a.yaxis.set_ticklabels([])
 
-
     axes = [ax3,ax4,ax5]
     for a in axes:
         a.set_xlim([0,50])
@@ -150,16 +152,14 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     ax3_score = []
     ax5_score = []
     for (i,j),z in np.ndenumerate(prediction):
-        var = int((10-z)*3)
+        var = int(30*(1-z))
         ax3_score.append(var)
         if i%9 == 0 and j%9 == 0:
             if ((i-23)**2+(j-24)**2)**0.5 < 24.9:
                 ax3.text(j+2,i+1,str(var),ha='left',va='bottom', bbox=dict(boxstyle='round',facecolor='white',edgecolor='0.3'))
-    
-    
+            
     prediction[prediction > 0.5] = 1
-    prediction[prediction < 0.5] = 0       
-
+    prediction[prediction < 0.5] = 0
     for (i,j),z in np.ndenumerate(prediction_contrast_1):
         var = int((100-z)*9/24)
         ax5_score.append(var)
