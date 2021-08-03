@@ -164,7 +164,7 @@ function keyPush(evt) {
             t2 = d.getTime();
             var final_time = t2 - t;
             points_seen.push([x,y,color, final_time]);
-            dataset.push([1,x-500,y-500,color,final_time])
+            dataset.push([1,x-500,-1*y+500,color,final_time])
             }
             console.log("SEEN");
             new_point()
