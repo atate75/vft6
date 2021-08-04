@@ -59,7 +59,7 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
             sdr += 1
             locations.append(crt)
         crt+= 1
-    sdr /= len(dataset)
+    sdr = str(sdr) + " / "+str(len(dataset))
 
     fig = plt.figure()
     fig.subplots_adjust(bottom=0.025, left=0.025, top = 0.975, right=0.975)
