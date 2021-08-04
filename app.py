@@ -12,6 +12,7 @@ from matplotlib import colors
 app = Flask(__name__)
 CORS(app)
 
+#THIS IS DEPLOYED VERSION
 def return_dots_VFT6(dataset, reliability_dict): #Results/analysis 
     x_good = []; y_good = []; x_bad =[]; y_bad =[]; color=[]; color_good = [];now = datetime.datetime.now()
     time_set = []; time_set_GOOD = []; time_set_GOODx = []; time_set_badX = []
@@ -25,8 +26,9 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
             y_bad.append(point[2])
             color.append(point[3])
             if point[3] >= 79:
-                x_vals.append([point[1],point[2]])
-                z.append(0)
+                for _ in range(0,2):
+                    x_vals.append([point[1],point[2]])
+                    z.append(0)
         else:
             time_set_GOOD.append(point[-1])
             x_good.append(point[1])
@@ -41,11 +43,10 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
         time_set.append(point[-1])
         crt += 1
   
-    
     upper_bound_time = statistics.median(time_set_GOOD) + 2*statistics.stdev(time_set_GOOD)
 
-    FPR = str(reliability_dict["FPR"][1]-reliability_dict["FPR"][0]) +" / "+str(4)
-    FNR = str(reliability_dict["FPR"][1]-reliability_dict["FNR"][0]) +" / "+str(4)
+    FPR = str(4-reliability_dict["FPR"][0]) +" / "+str(4)
+    FNR = str(4-reliability_dict["FNR"][0]) +" / "+str(4)
     number_dots = len(x_good) + len(x_bad)
     time_now = now.strftime("%Y-%m-%d")
 
@@ -60,12 +61,10 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
         crt+= 1
     sdr /= len(dataset)
 
-
     fig = plt.figure()
     fig.subplots_adjust(bottom=0.025, left=0.025, top = 0.975, right=0.975)
 
     spec = gridspec.GridSpec(ncols = 4, nrows =5,figure=fig)
-
 
     ax1 = fig.add_subplot(spec[0:2, 0:2])
     ax2 = fig.add_subplot(spec[-1,:])
@@ -76,7 +75,6 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     fig.suptitle(f"AT-VFT6 BETA ({time_now})",fontsize=18,fontweight="bold")
     fig.set_size_inches(w=8.5,h=11)
     
-
     ax1.scatter(x_good, y_good, s=60,color="g")
     ax1.scatter(x_bad, y_bad, s=60, c=color, edgecolors="red",cmap="gray")
     ax1.set_facecolor("#252525")
@@ -84,8 +82,7 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     ax1.axhline(y=0, color='white')
     ax1.axvline(x=0, color='white')
     ax1.set_title("Raw Data")
-
-    
+ 
     ax2.plot(time_set_GOODx,time_set, label="Response time")
     ax2.axhline(y=upper_bound_time,color="g", linestyle="--", label="Upper Bound Outliers")
     ax2.axhline(y=statistics.mean(time_set_GOOD),color="m", linestyle="--", label="Moving Median")
@@ -98,7 +95,6 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     for i in locations:
         ax2.axvspan(i,i+1,color="blue",alpha=0.25, linestyle="--" )
     
-
     nbhrs = KNeighborsClassifier(n_neighbors=7, weights='distance')
     nbhrs.fit(x_vals,z)
     
@@ -118,9 +114,7 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     prediction_contrast_1[-1][-1] = 1
     prediction[0][0] = 0
     prediction[-1][-1] = 1
-    ax4.set_aspect('equal')
-    
-    
+    ax4.set_aspect('equal') 
     
     ax1.set_xlim([-500,500])
     ax1.set_ylim([-500,500])
@@ -142,6 +136,8 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
         a.yaxis.set_ticks_position('none')
         a.yaxis.set_ticklabels([])
 
+    ax3.set_xlim([0,50])
+    ax3.set_ylim([0,50])
     axes = [ax3,ax4,ax5]
     for a in axes:
         a.set_xlim([0,50])
@@ -168,8 +164,7 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
                 if prediction[i][j] == 1:
                     var = "#"
                     ax5_score[-1] = 0
-                ax5.text(j+1,i+1,str(var),ha='left',va='bottom', bbox=dict(boxstyle='round',facecolor='white',edgecolor='0.3'))
-                
+                ax5.text(j+1,i+1,str(var),ha='left',va='bottom', bbox=dict(boxstyle='round',facecolor='white',edgecolor='0.3'))            
 
     ax3_score = round(statistics.mean(ax3_score),1)
     ax5_score = round(statistics.mean(ax5_score),1)
@@ -178,10 +173,7 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     cmap = colors.ListedColormap(['white', 'red'])
     bounds=[0,0.5,1]
     norm = colors.BoundaryNorm(bounds, cmap.N)
-
-
-
-    
+ 
     ax4.pcolormesh(prediction,cmap=cmap, norm=norm)
     ax4.pcolormesh(prediction_contrast_1,alpha=0.7,cmap=plt.cm.get_cmap("binary",7),vmin=20,vmax=100)
     
@@ -190,7 +182,6 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     statement = f"Dots: {number_dots}, FalsePOS ERR: {FPR}, FalseNEG ERR: {FNR}, Gaze EST: {round(sdr,2)} Total Time: {tt}."
     ax2.set_xlabel("Dot \n " + statement,fontweight="bold")
     ax3.set_aspect('equal')
-
 
     fig.tight_layout()
 
