@@ -179,7 +179,7 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     
     tt = convert(reliability_dict["TotalTime"]/1000)
     
-    statement = f"Dots: {number_dots}, FalsePOS ERR: {FPR}, FalseNEG ERR: {FNR}, Gaze EST: "+sdr+" Total Time: {tt}."
+    statement = f"Dots: {number_dots}, FalsePOS ERR: {FPR}, FalseNEG ERR: {FNR}, Gaze EST: "+sdr+f" Total Time: {tt}."
     ax2.set_xlabel("Dot \n " + statement,fontweight="bold")
     ax3.set_aspect('equal')
 
