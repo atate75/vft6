@@ -1,19 +1,27 @@
 <!DOCTYPE html>
 
 <html>
-    <body style="background-color:powderblue;">
+    <title>Visual Field Test</title>    
+
+<body style="background-color:powderblue;">
 <canvas id="myCanvas" width=1000px height=1000px style="border:1px solid #d3d3d3;"></canvas>
 <script>
 
 //THIS IS THE DEPLOYED VERSION
 var canvas = document.getElementById('myCanvas');
 document.addEventListener("keydown", keyPush);
-canvas.style = "position:absolute; left: 50%; width: 1000px; margin-left: -500px;";
-
+document.addEventListener("touchstart", Touchscreen)
+document.body.style.overflow = 'hidden';
+canvas.style = "position:absolute; left: 25%";
+canvas.setAttribute('width',window.innerHeight)
+canvas.setAttribute('height',window.innerHeight)
+console.log(window.innerHeight)
+console.log(window.innerWidth)
+console.log(canvas.width)
+console.log(canvas.height)
 var context = canvas.getContext('2d');
 context.fillStyle = "rgb(38,38,38)";
 context.fillRect(0, 0, canvas.width, canvas.height);
-
 
 var valid_send = false
 var centerX = canvas.width / 2;
@@ -130,20 +138,36 @@ function request() {
     }
 }
 
-function show_all(){
-    context.fillStyle = "rgb(38,38,38)";
-    console.log("STARTING");
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    for (var i = 0; i < standard_points.length; i++){
-        x = standard_points[i][0]*500 +centerX;
-        y = standard_points[i][1]*500 +centerY;
-        context.beginPath();
-        context.arc(x, y, radius, 0, 2 * Math.PI, false);
-        context.fillStyle = 'rgb(51,51,51)';
-        context.fill();
-    }
-}
 
+function Touchscreen(evt){
+        if (runs == 0){
+            new_point()
+        }
+        if (valid_send){
+            valid_send = false;
+            while(timers.length){
+                clearTimeout(timers.pop());}
+            runs += 1;
+
+            //False Positives and False Negatives
+            if (reliability_dict["FNR"][2]==true){
+                reliability_dict["FNR"][2] = false;
+            } else if (reliability_dict["FPR"][2]==true){
+                reliability_dict["FPR"][2] = false;
+                reliability_dict["FPR"][0] += 1;
+            } else{
+            var d = new Date();
+            t2 = d.getTime();
+            var final_time = t2 - t;
+            points_seen.push([x,y,color, final_time]);
+            dataset.push([1,x-500,-1*y+500,color,final_time])
+            }
+            console.log("SEEN");
+            
+            new_point()
+        }
+
+}
 function keyPush(evt) {
     switch(evt.keyCode) {
         case 32:
