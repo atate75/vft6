@@ -154,8 +154,8 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
             if ((i-23)**2+(j-24)**2)**0.5 < 24.9:
                 ax3.text(j+2,i+1,str(var),ha='left',va='bottom', bbox=dict(boxstyle='round',facecolor='white',edgecolor='0.3'))
             
-    prediction[prediction > 0.5] = 1
-    prediction[prediction < 0.5] = 0
+    prediction[prediction > 0.75] = 1
+    prediction[prediction < 0.75] = 0
     for (i,j),z in np.ndenumerate(prediction_contrast_1):
         var = int((100-z)*9/24)
         ax5_score.append(var)
