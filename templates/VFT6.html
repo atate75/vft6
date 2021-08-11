@@ -15,10 +15,6 @@ document.body.style.overflow = 'hidden';
 canvas.style = "position:absolute; left: 25%";
 canvas.setAttribute('width',window.innerHeight)
 canvas.setAttribute('height',window.innerHeight)
-console.log(window.innerHeight)
-console.log(window.innerWidth)
-console.log(canvas.width)
-console.log(canvas.height)
 var context = canvas.getContext('2d');
 context.fillStyle = "rgb(38,38,38)";
 context.fillRect(0, 0, canvas.width, canvas.height);
@@ -125,7 +121,7 @@ function new_point() {
 }
 
 function request() {
-    
+    document.removeEventListener('Keyboard',keyPush)
     console.log(reliability_dict);
     console.log(dataset);
     var xhr = new XMLHttpRequest();

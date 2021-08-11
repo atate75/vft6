@@ -115,10 +115,13 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
     prediction[0][0] = 0
     prediction[-1][-1] = 1
     ax4.set_aspect('equal') 
-    
+    if len(x_bad) == 0:
+        prediction = np.full((50,50),0)
+        prediction_contrast_1 = np.full((50,50),20)
+        ax4.text(25,35,"No Loss Detected",ha='center',bbox=dict(boxstyle='round',facecolor='white',edgecolor='0.3'))
     ax1.set_xlim([-500,500])
     ax1.set_ylim([-500,500])
-    ax3.pcolormesh(prediction,cmap='binary')
+    ax3.pcolormesh(prediction,cmap='binary',vmin=0,vmax=1)
     ax3.add_patch(patches.Circle((25,25),radius=37,color='white',linewidth=100, fill = False))
     ax4.add_patch(patches.Circle((25,25),radius=37,color='white',linewidth=100, fill = False))
     ax1.add_patch(patches.Circle((0,0),radius=710,color='white',linewidth=100, fill = False))
