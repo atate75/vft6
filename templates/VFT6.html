@@ -48,6 +48,15 @@ var timer1;
 var x; 
 var y; 
 var color; 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const name = urlParams.get('name')
+const test_type = urlParams.get('test_type')
+const eye = urlParams.get('eye')
+const age = urlParams.get('age')
+const glauStatus = urlParams.get('glauStatus')
+console.log(name,test_type,eye,age,glauStatus)
+
 context.font = "30px Helvetica";
 context.fillStyle = "White";
 context.textAlign = 'center';

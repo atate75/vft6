@@ -198,9 +198,14 @@ def convert(seconds):
       
     return "%02d:%02d" % (minutes, seconds)
 
-@app.route("/")
+@app.route("/test")
 def main():
     return render_template("VFT6.html")
+ 
+
+@app.route("/")
+def startup():
+    return render_template("index.html")
  
 @app.route("/process", methods=['GET','POST','OPTIONS'])
 @cross_origin()
