@@ -209,7 +209,7 @@ def push_to_google_drive(google_drive,path):
     PredLoss = google_drive[5]
     TestType = google_drive[6]
     scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
-    creds = ServiceAccountCredentials.from_json_keyfile_name(path+"creds.json",scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_name(path+"/creds.json",scope)
     client = gspread.authorize(creds)
     sheet = client.open("VFT6Database").sheet1
     alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
