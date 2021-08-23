@@ -1,19 +1,17 @@
 from flask.scaffold import *
 from flask import request, jsonify, render_template, Flask
 from matplotlib import pyplot as plt
-import os, random
-import datetime, statistics
+import os, random, datetime, statistics, gspread, hashlib
 import matplotlib.gridspec as gridspec
 from sklearn.neighbors import KNeighborsClassifier
 import numpy as np
 from flask_cors import CORS, cross_origin
-from matplotlib import patches
-from matplotlib import colors
+from matplotlib import patches,colors
 app = Flask(__name__)
 CORS(app)
 
 #THIS IS DEPLOYED VERSION
-def return_dots_VFT6(dataset, reliability_dict): #Results/analysis 
+def return_dots_VFT6(dataset, reliability_dict,demographics): #Results/analysis 
     x_good = []; y_good = []; x_bad =[]; y_bad =[]; color=[]; color_good = [];now = datetime.datetime.now()
     time_set = []; time_set_GOOD = []; time_set_GOODx = []; time_set_badX = []
     crt = 0
@@ -188,7 +186,8 @@ def return_dots_VFT6(dataset, reliability_dict): #Results/analysis
 
     fig.tight_layout()
 
-    return fig
+    google_drive = [demographics['Name'],demographics["Age"],demographics["Eye"], demographics["GlauStatus"],ax3_score,ax5_score,demographics["TestType"]]
+    return fig, google_drive
 
 def convert(seconds):
     seconds = seconds % (24 * 3600)
@@ -197,6 +196,33 @@ def convert(seconds):
     seconds %= 60
       
     return "%02d:%02d" % (minutes, seconds)
+
+
+def push_to_google_drive(google_drive,path):
+    name = google_drive[0]
+    age = google_drive[1]
+    eye = google_drive[2]
+    GlaucStatus = google_drive[3]
+    BlindProba = google_drive[4]
+    PredLoss = google_drive[5]
+    TestType = google_drive[6]
+    scope = ["https://spreadsheets.google.com/feeds",'https://www.googleapis.com/auth/spreadsheets',"https://www.googleapis.com/auth/drive.file","https://www.googleapis.com/auth/drive"]
+    creds = ServiceAccountCredentials.from_json_keyfile_name(path+"creds.json",scope)
+    client = gspread.authorize(creds)
+    sheet = client.open("VFT6Database").sheet1
+    alphabet = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+    final_name = ""
+    for i in name:
+        if i.lower() in alphabet:
+            final_name += i.lower()
+    string_to_hash = final_name + str(age)
+    hash = hashlib.sha1(str(string_to_hash).encode('utf-8'))
+    final = hash.hexdigest() 
+    tody = datetime.datetime.today()
+    year = tody.year
+    final_age = int(year) - int(age)
+    Row = [final,eye,final_age,GlaucStatus,BlindProba,PredLoss,TestType,datetime.datetime.today().strftime('%Y-%m-%d'),"Active Build"]
+    sheet.insert_row(Row,2)
 
 @app.route("/test")
 def main():
@@ -213,10 +239,13 @@ def processjson():
     
     data = request.get_json(force=True)
     DataSet = data['DataSet']
+    demographics = data['demographics']
     reliability_dict = data['reliability_dict']
-    fig = return_dots_VFT6(DataSet,reliability_dict)
-    cwd = os.getcwd()
+    fig,google_drive = return_dots_VFT6(DataSet,reliability_dict,demographics)
     
+
+    cwd = os.getcwd()
+    push_to_google_drive(google_drive,cwd)
     stuff_to_remove = os.listdir(cwd+"/static")
 
     for i in stuff_to_remove:

@@ -55,7 +55,7 @@ const test_type = urlParams.get('test_type')
 const eye = urlParams.get('eye')
 const age = urlParams.get('age')
 const glauStatus = urlParams.get('glauStatus')
-console.log(name,test_type,eye,age,glauStatus)
+const demographics = {"Name":name,"TestType":test_type,"Eye":eye,"Age":age,"GlauStatus":glauStatus}
 
 context.font = "30px Helvetica";
 context.fillStyle = "White";
@@ -144,11 +144,12 @@ function request() {
     document.removeEventListener('Keyboard',keyPush)
     console.log(reliability_dict);
     console.log(dataset);
+    console.log(demographics)
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "https://visual-field-test.herokuapp.com/process", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
 
-    xhr.send(JSON.stringify({"DataSet":dataset,"reliability_dict":reliability_dict}));
+    xhr.send(JSON.stringify({"DataSet":dataset,"reliability_dict":reliability_dict,"demographics":demographics}));
     xhr.onload = function() {
     var data = JSON.parse(this.responseText);
     console.log(data)
