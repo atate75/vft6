@@ -47,6 +47,10 @@ def return_dots_VFT6(dataset, reliability_dict,demographics): #Results/analysis
 
     FPR = str(4-reliability_dict["FPR"][0]) +" / "+str(4)
     FNR = str(4-reliability_dict["FNR"][0]) +" / "+str(4)
+
+    if demographics["TestType"].lower() == 'fast':
+        FPR = "n/a"
+        FNR = 'n/a'
     number_dots = len(x_good) + len(x_bad)
     time_now = now.strftime("%Y-%m-%d")
 
