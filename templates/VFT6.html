@@ -2,6 +2,16 @@
 
 <html>
     <title>Visual Field Test</title>    
+    <style>
+            canvas {
+                padding-left: 0;
+                padding-right: 0;
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+                
+                }
+        </style>
 <head>
     <!-- Global site tag (gtag.js) - Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-QNJX8NG75K"></script>
@@ -15,13 +25,16 @@
 
 </head>
 <body style="background-color:powderblue;">
-<canvas id="myCanvas" width=1000px height=1000px style="border:1px solid #d3d3d3;"></canvas>
+<canvas id="myCanvas" class = canvas ></canvas>
 <script>
 
 //THIS IS THE DEPLOYED VERSION
 var canvas = document.getElementById('myCanvas');
 document.addEventListener("keydown", keyPush);
 document.addEventListener("touchstart", Touchscreen);
+var test_is_running = true
+
+
 document.body.style.overflow = 'hidden';
 canvas.style = "position:absolute; left: 25%";
 canvas.setAttribute('width',window.innerHeight);
@@ -62,8 +75,9 @@ if (test_type.toLowerCase() == "fast"){
     var standard_points = [[0, -0.4, 20], [-0.7, 0.1, 20], [-0.3526, -0.4854, 20], [0.72811, -0.52900, 20], [0.19021, -0.06180, 20], [-0.05, 0.05, 20], [-0.72811, 0.529, 20], [0.529, 0.728, 20], [0.57063, -0.18541, 20], [-0.7, -0.1, 20], [0.5, 0, 20], [0.2351, -0.3236, 20], [0.323, -0.2351, 20], [0, 0, 'FPR'], [-0.2351, 0.3236, 20], [-0.1854, -0.5706, 20], [0, 0, 'FNR'], [0, 0.9, 20], [0.1236, 0.3804, 20], [0.278, -0.855, 20], [0, 0.2, 20], [-0.1236, -0.3804, 20], [0, 0.4, 20], [-0.5706, -0.1854, 20], [0.35267, -0.4854, 20], [-0.728, -0.529, 20], [-0.2, 0, 20], [-0.3526, 0.4854, 20], [0, -0.6, 20], [0.3236, 0.235, 20], [-0.8559, 0.278, 20], [0.278, 0.8559, 20], [0.1236, -0.3804, 20], [0, 0, 'FNR'], [0, 0, 'FNR'], [-0.4854, 0.35267, 20], [-0.3236, 0.235, 20], [0, -0.2, 20], [-0.3804, -0.1236, 20], [0, 0, 'FNR'], [0.7, 0.1, 20], [0.1854, 0.5706, 20], [0.8559, 0.278, 20], [-0.235, -0.3236, 20], [0.3804, -0.1236, 20], [0.05, 0.05, 20], [0.1175, 0.1618, 20], [-0.1236, 0.38042, 20], [0, -0.9, 20], [-0.5, 0, 20], [0, 0, 'FPR'], [-0.529, -0.7281, 20], [-0.1175, -0.1618, 20], [-0.3236, -0.235, 20], [0.35267, 0.4854101966249684, 20], [-0.05, -0.05, 20], [-0.27811529493745274, 0.8559508646656382, 20], [-0.4854101966249684, -0.3526711513754839, 20], [0, 0, 'FPR'], [-0.8559508646656382, -0.2781152949374527, 20], [0.8559508646656382, -0.2781152949374527, 20], [-0.570633909777092, 0.18541019662496844, 20], [0.7, -0.1, 20], [-0.3804226065180614, 0.12360679774997896, 20], [-0.11755705045849463, 0.1618033988749895, 20], [0.1902113032590307, 0.06180339887498948, 20], [0.4854101966249684, -0.3526711513754839, 20], [0.4854101966249684, 0.3526711513754839, 20], [-0.5290067270632258, 0.7281152949374528, 20], [-0.18541019662496847, 0.570633909777092, 20], [0.5290067270632258, -0.7281152949374528, 20], [0.3804226065180614, 0.12360679774997896, 20], [-0.9, 0, 20], [0.570633909777092, 0.18541019662496844, 20], [0.9, 0, 20], [0.2, 0, 20], [0.11755705045849463, -0.1618033988749895, 20], [0.18541019662496847, -0.570633909777092, 20], [-0.1902113032590307, 0.06180339887498948, 20], [0, 0, 'FPR'], [0, 0.6, 20], [-0.1902113032590307, -0.06180339887498948, 20], [-0.27811529493745274, -0.8559508646656382, 20], [0.05, -0.05, 20], [0.7281152949374528, 0.5290067270632258, 20], [0.23511410091698925, 0.323606797749979, 20]];
 }
 const demographics = {"Name":name,"TestType":test_type,"Eye":eye,"Age":age,"GlauStatus":glauStatus};
-
-context.font = "30px Helvetica";
+const font_size = Math.trunc(30/1278 * canvas.width)
+console.log(font_size)
+context.font = font_size+"px Helvetica";
 context.fillStyle = "White";
 context.textAlign = 'center';
 context.fillText("Press Enter to start. Then Press Space bar when you see the dot.", centerX, centerY);
@@ -106,12 +120,16 @@ function fail() {
 
 function new_point() {
     if (runs == standard_points.length){ //Ends code
+        if (test_is_running){
         context.fillText("The test has concluded. Results will be downloaded shortly.", centerX, centerY);
         console.log("DONE")
         var d = new Date();
         var final_time = d.getTime() - start_time;
         reliability_dict["TotalTime"] = final_time;
         request()
+    }else{
+        console.log("Stop Clicking")
+    }
     } else {
     if (standard_points[runs][0] > 1){
         x = standard_points[runs][0];
@@ -147,10 +165,11 @@ function new_point() {
 }
 
 function request() {
+    test_is_running = false
     document.removeEventListener('Keyboard',keyPush)
     console.log(reliability_dict);
     console.log(dataset);
-    console.log(demographics)
+    console.log(demographics);
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "https://visual-field-test.herokuapp.com/process", true);
     xhr.setRequestHeader('Content-Type', 'application/json');
@@ -158,9 +177,12 @@ function request() {
     xhr.send(JSON.stringify({"DataSet":dataset,"reliability_dict":reliability_dict,"demographics":demographics}));
     xhr.onload = function() {
     var data = JSON.parse(this.responseText);
-    console.log(data)
-    window.open(data.redirect, "_blank")
-    //window.location.href = data.redirect;
+    console.log(data);
+    if (name == "DEV"){
+    window.open(data.redirect, "_blank");
+    }else {
+    window.location.href = data.redirect;
+    }
     }
 }
 

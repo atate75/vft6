@@ -90,6 +90,14 @@ p {
     bottom: 0;
 
 }
+
+.welcome-bottom2 {
+    font-size: 20px;
+    color: white;
+    z-index: 3;
+    font-weight: 700;
+
+}
 .get-start-area .email {
     height: 50px;
     border: black;
@@ -133,6 +141,22 @@ p {
     border-radius: 30px;
 }
 
+.selectWrapper{
+  border-radius:36px;
+  display:inline-block;
+  overflow:hidden;
+  background:#ffffff;
+  border:1px solid #ffffff;
+}
+.selectBox{
+  width:140px;
+  height:40px;
+  border:0px;
+  outline:none;
+  font-family: 'Cabin', sans-serif;
+  color: grey;
+  padding: 5px;
+}
 .get-start-area .submit {
     background-color: #fb397d;
     color: #fff;
@@ -207,10 +231,10 @@ p {
                     </div>
                     <div class="get-start-area">
                         <form class="form-inline">
-                            <input type="text" id="name" class="form-control email" placeholder="Enter name/ID" autocomplete="off" >
+                            <input type="text" id="name" class="form-control email" placeholder="Enter name/ID" autocomplete="off">
                         </form>
                         <form class="form-inline">
-                            <input type="number" id="age" class="form-control email" placeholder="Enter YOB" autocomplete="off" >
+                            <input type="number" id="age" class="form-control email" placeholder="Enter YOB" autocomplete="off">
                         </form>
                         <form class="form-inline">
                             <input type="radio" name="eye" value="R" id="Right">
@@ -219,6 +243,7 @@ p {
                                                       <label for="left" class="radio_group">Left Eye</label><br>
                                                     </form>
                                                     <form class="form-inline">
+                                                        
                                                         <input type="radio" name="glauStatus" value="T" id="glauPresent">
                                                                                   <label for="right" class="radio_group">Glaucoma Present</label><br>
                                                         <input type="radio" name="glauStatus" value="F" id="glauAbsent">
@@ -226,13 +251,20 @@ p {
                                                                                 </form>
 
                                                 <form>
-                                  <input type="text" id="test_type" class="form-control email" placeholder="Test Type">
-
+                                                    <div class="selectWrapper">
+                                                    <select name="test_type" id="test_type" class = "selectBox">
+                                                        <option value="" disabled selected>Test Type</option>
+                                                        <option value="Fast">Fast</option>
+                                                        <option value="Standard">Standard</option>
+                                     
+                                                      </select>
+                                                    </div>
+                                    
                                   <div class="wellcome-heading">
                                       <p> After submit, press space when gray stimulus is visable.</p>
                                   </div>
 
-                            <input type="button" class="submit" value="Submit" onclick="input_data()">
+                            <input class="submit" type="button" value="Submit" onclick="input_data()" >
                             <input type="button" class="submit" value="Disclaimer" onclick="disclaim_show()">
                             
                         </form>
@@ -253,15 +285,15 @@ p {
 
 </body>
 <script>
-    //THIS IS DEPLOYED
+    
 function input_data(){
 
-	var name = document.getElementById("name").value
-	var test_type = document.getElementById("test_type").value
-	var eye = document.getElementById("Right").checked
-	var age = document.getElementById("age").value
-	var glauStatus = document.getElementById("glauPresent").checked
-	console.log(name,test_type,eye,age,glauStatus)
+    var name = document.getElementById("name").value
+    var test_type = document.getElementById("test_type").value
+    var eye = document.getElementById("Right").checked
+    var age = document.getElementById("age").value
+    var glauStatus = document.getElementById("glauPresent").checked
+    console.log(name,test_type,eye,age,glauStatus)
     var url = "https://visual-field-test.herokuapp.com/test?" +"name="+(name)+"&"+"test_type="+(test_type)+"&"+"eye="+(eye)+"&"+"age="+(age)+"&"+"glauStatus="+(glauStatus)
     console.log(url)
 	window.location.href = url;

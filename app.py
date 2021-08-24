@@ -226,7 +226,10 @@ def push_to_google_drive(google_drive,path):
     final = hash.hexdigest() 
     tody = datetime.datetime.today()
     year = tody.year
-    final_age = int(year) - int(age)
+    try:
+        final_age = int(year) - int(age)
+    except ValueError:
+        final_age = int(years)
     Row = [final,eye,final_age,GlaucStatus,BlindProba,PredLoss,TestType,datetime.datetime.today().strftime('%Y-%m-%d'),"Active Build"]
     sheet.insert_row(Row,2)
 
