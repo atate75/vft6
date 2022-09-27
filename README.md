@@ -1,4 +1,4 @@
-# vft6
+# Visual Field Test - V6
 *No longer Up*
 
 Healtcare web-app, preforms visual field test and analyzes in patient's browser. Used for detection/monitoring of ocular diseases like Glaucoma or Macular Degeneration.
